@@ -1,11 +1,4 @@
 export const NETWORK_ID = "testnet";
 
-export const SOCIAL_CONTRACT = {
-  mainnet: "social.near",
-  testnet: "v1.social08.testnet"
-};
-
-export const GUESTBOOK_CONTRACT = {
-  mainnet: "hello.near-examples.near",
-  testnet: "guestbook.near-examples.testnet"
-};
+export const TRIAL_CONTRACT_ID = "your-trial-contract.testnet"; // Replace with your trial contract ID
+export const MPC_CONTRACT_ID = "v1.signer-prod.testnet"; // Replace with your MPC contract ID

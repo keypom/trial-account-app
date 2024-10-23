@@ -17,7 +17,8 @@ import { setupBitteWallet } from "@near-wallet-selector/bitte-wallet";
 import {
   Action,
   NetworkId,
-  setupWalletSelector
+  setupWalletSelector,
+  WalletSelector
 } from "@near-wallet-selector/core";
 import { setupEthereumWallets } from "@near-wallet-selector/ethereum-wallets";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
@@ -29,6 +30,7 @@ import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 import { setupOKXWallet } from "@near-wallet-selector/okx-wallet";
 import { setupSender } from "@near-wallet-selector/sender";
 import { distinctUntilChanged, map } from "rxjs";
+import { keyStores, Near } from "near-api-js";
 
 export const THIRTY_TGAS = "30000000000000";
 export const NO_DEPOSIT = "0";
@@ -40,6 +42,11 @@ type Account = {
 };
 
 export class Wallet {
+  selector: WalletSelector | undefined;
+
+  networkId: NetworkId;
+  createAccessKeyFor: string | undefined;
+
   /**
    * @constructor
    * @param {string} networkId - the network id to connect to
@@ -59,6 +66,7 @@ export class Wallet {
     this.createAccessKeyFor = createAccessKeyFor;
     // @ts-expect-error - "property does not exist", ya whatever
     this.networkId = networkId;
+    this.selector = undefined;
   }
 
   /**
@@ -99,11 +107,6 @@ export class Wallet {
         setupOKXWallet(),
         // @ts-expect-error - "property does not exist", ya whatever
         setupMeteorWallet(),
-        // This configuration comes from wallets/evm
-        setupEthereumWallets({
-          wagmiConfig: wagmiConfig,
-          web3Modal: transformedWeb3Modal
-        }),
         // @ts-expect-error - "property does not exist", ya whatever
         setupLedger(),
         // @ts-expect-error - "property does not exist", ya whatever
@@ -192,6 +195,12 @@ export class Wallet {
     });
 
     return getTransactionLastResult(outcome);
+  };
+
+  getWallet = async () => {
+    // @ts-expect-error - "property does not exist", ya whatever
+    const selectedWallet = await (await this.selector).wallet();
+    return selectedWallet;
   };
 
   /**
