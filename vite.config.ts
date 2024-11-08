@@ -8,7 +8,11 @@ export default defineConfig({
   plugins: [
     TanStackRouterVite(),
     react(),
-    nodePolyfills({ globals: { global: true } })
+    nodePolyfills({
+      protocolImports: true, // enables polyfills only when necessary
+      globals: { global: true },
+      exclude: ["fs", "path", "os"] // exclude Node modules you want to ignore
+    })
   ],
   resolve: {
     alias: {
